@@ -7,7 +7,6 @@
 * {
     box-sizing: border-box;
 }
-
 body {
     padding-top: 3rem;
     background-color: var(--bg-main);

@@ -6,6 +6,7 @@ if(notes){
         addNewNote(note)
     })
 }
+
 function addNewNote(text = ''){
     console.log(text)
     const note = document.createElement('div')
