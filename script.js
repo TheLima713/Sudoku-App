@@ -9,12 +9,11 @@ if(notes){
 
 function addNewNote(text = ''){
     console.log(text)
-    const title = text.split('\n')[0]
     const note = document.createElement('div')
     note.classList.add('note')
     note.innerHTML = `
     <div class="tools">
-        <span>${title.substring(0,35) + (text.length>35?'...':'')}</span>
+        <span class="title"></span>
         <button class="show hidden"><i class="fa-solid fa-plus"></i></button>
         <button class="hide"><i class="fa-solid fa-minus"></i></button>
         <button class="edit"><i class="fa-solid fa-pen"></i></button>
@@ -28,11 +27,17 @@ function addNewNote(text = ''){
     const editBtn = note.querySelector('.edit')
     const delBtn = note.querySelector('.delete')
 
+    const title = note.querySelector('.title')
     const main = note.querySelector('.main')
     const textArea= note.querySelector('textarea')
     
-    textArea.value = text
+    let name
+    name = text.split('\n')[0]
+    name = name.replace(/[^0-9a-zA-Z ,.;?!]/gi, '')
+    name = name.substring(0,25)
+    title.innerText = name
     main.innerHTML = marked.parse(text)
+    textArea.value = text
 
     showBtn.addEventListener('click',()=>{
         main.classList.remove('hidden')
