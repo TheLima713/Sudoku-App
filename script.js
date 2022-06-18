@@ -48,6 +48,7 @@ function addNewNote(text = ''){
 
         setLS()
     })
+    
     notesEl.appendChild(note)
 }
 addBtn.addEventListener('click',()=>{
