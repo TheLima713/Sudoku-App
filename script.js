@@ -9,10 +9,12 @@ if(notes){
 
 function addNewNote(text = ''){
     console.log(text)
+    const title = text.split('\n')[0]
     const note = document.createElement('div')
     note.classList.add('note')
     note.innerHTML = `
     <div class="tools">
+        <span>${title.substring(0,35) + (text.length>35?'...':'')}</span>
         <button class="show hidden"><i class="fa-solid fa-plus"></i></button>
         <button class="hide"><i class="fa-solid fa-minus"></i></button>
         <button class="edit"><i class="fa-solid fa-pen"></i></button>
@@ -34,6 +36,7 @@ function addNewNote(text = ''){
 
     showBtn.addEventListener('click',()=>{
         main.classList.remove('hidden')
+        note.style.width = '75%'
         note.style.height = '400px'
 
         hideBtn.classList.remove('hidden')
@@ -43,6 +46,7 @@ function addNewNote(text = ''){
         main.classList.add('hidden')
         textArea.classList.add('hidden')
 
+        note.style.width = 'fit-content'
         note.style.height = '0px'
 
         showBtn.classList.remove('hidden')
