@@ -13,27 +13,40 @@ function addNewNote(text = ''){
     note.classList.add('note')
     note.innerHTML = `
     <div class="tools">
-        <button class="minimize"><i class="fa-solid fa-window-minimize"></i></button>
+        <button class="show hidden"><i class="fa-solid fa-plus"></i></button>
+        <button class="hide"><i class="fa-solid fa-minus"></i></button>
         <button class="edit"><i class="fa-solid fa-pen"></i></button>
         <button class="delete"><i class="fas fa-trash-alt"></i></button>
     </div>
     <div class="main"></div>
     <textarea class="hidden"></textarea>
     `
-    const minBtn = note.querySelector('.minimize')
+    const showBtn = note.querySelector('.show')
+    const hideBtn = note.querySelector('.hide')
     const editBtn = note.querySelector('.edit')
     const delBtn = note.querySelector('.delete')
 
     const main = note.querySelector('.main')
-    const cover = note.querySelector('.show')
     const textArea= note.querySelector('textarea')
     
     textArea.value = text
     main.innerHTML = marked.parse(text)
 
-    minBtn.addEventListener('click',()=>{
-        note.classList.toggle('minimized')
-        cover.classList.toggle('show')
+    showBtn.addEventListener('click',()=>{
+        main.classList.remove('hidden')
+        note.style.height = '400px'
+
+        hideBtn.classList.remove('hidden')
+        showBtn.classList.add('hidden')
+    })
+    hideBtn.addEventListener('click',()=>{
+        main.classList.add('hidden')
+        textArea.classList.add('hidden')
+
+        note.style.height = '0px'
+
+        showBtn.classList.remove('hidden')
+        hideBtn.classList.add('hidden')
     })
     editBtn.addEventListener('click',()=>{
         main.classList.toggle('hidden')
