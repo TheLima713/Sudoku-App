@@ -1,8 +1,3 @@
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/sw.js')
-    .then((reg)=>console.log('registered',reg))
-    .catch((err)=>console.log('failed to register',err))
-}
 
 const addBtn = document.getElementById('add')
 const notesEl = document.getElementById('notes-c')
