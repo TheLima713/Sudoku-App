@@ -87,6 +87,7 @@ function addNewNote(noteLS){
 }
 addBtn.addEventListener('click',()=>{
     addNewNote()
+    addBtn.innerText = addBtn.innerText == 'Add Note' ? 'New Note' : 'Add Note'
 })
 
 function setLS(){
