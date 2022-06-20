@@ -5,6 +5,8 @@ const assets = [
     '/js/script.js',
     '/css/styles.css',
     '/img/notes2.png',
+    '/img/notes3.png',
+    '/img/notes4.png',
     'https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap'
 ]
 
