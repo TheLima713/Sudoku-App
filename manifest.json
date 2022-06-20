@@ -1,0 +1,26 @@
+{
+    "name": "Quick Notes",
+    "short_name":"Q.Notes",
+    "start_url":"/index.html",
+    "display":"standalone",
+    "background_col/or":"#336",
+    "theme_color":"#448",
+    "orientation":"portrait-primary",
+    "icons":[
+        {
+            "src":"/img/notes2.png",
+            "type":"image/png",
+            "sizes":"64x64"
+        },
+        {
+            "src":"/img/notes3.png",
+            "type":"image/png",
+            "sizes":"128x128"
+        },
+        {
+            "src":"/img/notes4.png",
+            "type":"image/png",
+            "sizes":"144x144"
+        }
+    ]
+}

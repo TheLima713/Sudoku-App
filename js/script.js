@@ -1,3 +1,9 @@
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js')
+    .then((reg)=>console.log('registered',reg))
+    .catch((err)=>console.log('failed to register',err))
+}
+
 const addBtn = document.getElementById('add')
 const notesEl = document.getElementById('notes-c')
 const notes = JSON.parse(localStorage.getItem('notes'))
@@ -7,8 +13,8 @@ if(notes){
     })
 }
 
-function addNewNote(text = ''){
-    console.log(text)
+function addNewNote(noteLS){
+    const text = noteLS ? noteLS.text : ""
     const note = document.createElement('div')
     note.classList.add('note')
     note.innerHTML = `
@@ -35,31 +41,35 @@ function addNewNote(text = ''){
     name = text.split('\n')[0]
     name = name.replace(/[^0-9a-zA-Z ,.;?!]/gi, '')
     name = name.substring(0,25)
+
     title.innerText = name
     main.innerHTML = marked.parse(text)
     textArea.value = text
 
+    if(noteLS && noteLS.hide) {
+        note.classList.toggle('min')
+
+        showBtn.classList.remove('hidden')
+        hideBtn.classList.add('hidden')
+    }
+
     showBtn.addEventListener('click',()=>{
-        main.classList.remove('hidden')
-        note.style.width = '75%'
-        note.style.height = '400px'
+        note.classList.toggle('min')
 
         hideBtn.classList.remove('hidden')
         showBtn.classList.add('hidden')
     })
     hideBtn.addEventListener('click',()=>{
-        main.classList.add('hidden')
-        textArea.classList.add('hidden')
-
-        note.style.width = 'fit-content'
-        note.style.height = '0px'
+        note.classList.toggle('min')
 
         showBtn.classList.remove('hidden')
         hideBtn.classList.add('hidden')
     })
     editBtn.addEventListener('click',()=>{
-        main.classList.toggle('hidden')
-        textArea.classList.toggle('hidden')
+        if(note.style.height!='0px'){
+            main.classList.toggle('hidden')
+            textArea.classList.toggle('hidden')
+        }
     })
     delBtn.addEventListener('click',()=>{
         note.remove()
@@ -68,6 +78,12 @@ function addNewNote(text = ''){
     textArea.addEventListener('input',(e)=>{
         const { value } = e.target
         main.innerHTML = marked.parse(value)
+
+        let name
+        name = value.split('\n')[0]
+        name = name.replace(/[^0-9a-zA-Z ,.;?!]/gi, '')
+        name = name.substring(0,25)
+        title.innerText = name
 
         setLS()
     })
@@ -79,10 +95,16 @@ addBtn.addEventListener('click',()=>{
 })
 
 function setLS(){
-    const notesText = document.querySelectorAll('textarea')
+    const noteEls = document.querySelectorAll('.note')
     const notes = []
-    notesText.forEach(note=>{
-        notes.push(note.value)
+    noteEls.forEach(note=>{
+        const main = note.querySelector('.main')
+        const textArea= note.querySelector('textarea')
+        const hidden = main.classList.contains('hidden') && textArea.classList.contains('hidden')
+        notes.push({
+            text: textArea.value,
+            hide: hidden
+        })
     })
     localStorage.setItem('notes',JSON.stringify(notes))
 }
