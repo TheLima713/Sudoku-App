@@ -1,3 +1,8 @@
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js')
+    .then((reg)=>console.log('registered',reg))
+    .catch((err)=>console.log('failed to register',err))
+}
 
 const addBtn = document.getElementById('add')
 const notesEl = document.getElementById('notes-c')
@@ -87,7 +92,6 @@ function addNewNote(noteLS){
 }
 addBtn.addEventListener('click',()=>{
     addNewNote()
-    addBtn.innerText = addBtn.innerText == 'Add Note' ? 'New Note' : 'Add Note'
 })
 
 function setLS(){
