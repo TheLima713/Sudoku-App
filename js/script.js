@@ -1,111 +1,161 @@
-if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/sw.js')
-    .then((reg)=>console.log('registered',reg))
-    .catch((err)=>console.log('failed to register',err))
-}
+const colors = ['#ddf','#f24','#f82','#fd2','#2f4','#2df','#24f','#82f','#f2d']
 
-const addBtn = document.getElementById('add')
 const notesEl = document.getElementById('notes-c')
+const addBtn = document.getElementById('add')
+
 const notes = JSON.parse(localStorage.getItem('notes'))
-if(notes){
-    notes.forEach(note=>{
-        addNewNote(note)
-    })
+if(notes) notes.forEach(note=>addNote(note))
+let note0 = {
+    state:'active',//'archive'/'deleted',
+    title: 'Title',
+    text:'Text',
+    color: 0,
+    tags:[],
 }
 
-
-function addNewNote(noteLS){
-    const text = noteLS ? noteLS.text : ""
-    const note = document.createElement('div')
-    note.classList.add('note')
-    note.innerHTML = `
-    <div class="tools">
-        <span class="title"></span>
-        <button class="show hidden"><i class="fa-solid fa-plus"></i></button>
-        <button class="hide"><i class="fa-solid fa-minus"></i></button>
-        <button class="edit"><i class="fa-solid fa-pen"></i></button>
-        <button class="delete"><i class="fas fa-trash-alt"></i></button>
-    </div>
-    <div class="main"></div>
-    <textarea class="hidden"></textarea>
-    `
-    const showBtn = note.querySelector('.show')
-    const hideBtn = note.querySelector('.hide')
-    const editBtn = note.querySelector('.edit')
-    const delBtn = note.querySelector('.delete')
-
-    const title = note.querySelector('.title')
-    const main = note.querySelector('.main')
-    const textArea= note.querySelector('textarea')
-    
-    let name
-    name = text.split('\n')[0]
-    name = name.replace(/[^0-9a-zA-Z ,.;?!]/gi, '')
-    name = name.substring(0,25)
-
-    title.innerText = name
-    main.innerHTML = marked.parse(text)
-    textArea.value = text
-
-    if(noteLS && noteLS.hide) {
-        note.classList.toggle('min')
-
-        showBtn.classList.remove('hidden')
-        hideBtn.classList.add('hidden')
-    }
-
-    showBtn.addEventListener('click',()=>{
-        note.classList.toggle('min')
-
-        hideBtn.classList.remove('hidden')
-        showBtn.classList.add('hidden')
-    })
-    hideBtn.addEventListener('click',()=>{
-        note.classList.toggle('min')
-
-        showBtn.classList.remove('hidden')
-        hideBtn.classList.add('hidden')
-    })
-    editBtn.addEventListener('click',()=>{
-        if(note.style.height!='0px'){
-            main.classList.toggle('hidden')
-            textArea.classList.toggle('hidden')
-        }
-    })
-    delBtn.addEventListener('click',()=>{
-        note.remove()
-        setLS()
-    })
-    textArea.addEventListener('input',(e)=>{
-        const { value } = e.target
-        main.innerHTML = marked.parse(value)
-
-        let name
-        name = value.split('\n')[0]
-        name = name.replace(/[^0-9a-zA-Z ,.;?!]/gi, '')
-        name = name.substring(0,25)
-        title.innerText = name
-
-        setLS()
-    })
-    
-    notesEl.appendChild(note)
-}
+//disable right click
+document.addEventListener('contextmenu',(e)=>{e.preventDefault()})
 addBtn.addEventListener('click',()=>{
-    addNewNote()
+    addNote()
+    putLS()
 })
 
-function setLS(){
-    const noteEls = document.querySelectorAll('.note')
-    const notes = []
-    noteEls.forEach(note=>{
-        const main = note.querySelector('.main')
-        const textArea= note.querySelector('textarea')
-        const hidden = main.classList.contains('hidden') && textArea.classList.contains('hidden')
-        notes.push({
-            text: textArea.value,
-            hide: hidden
-        })
+function addNote(note = note0){
+    let text = note.text
+    let tags = ''
+    note.tags.forEach(tag=>
+        tags+=`
+        <li>
+            <p class="tag">${tag}</p>
+            <button class="del-tag">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </li>
+        `
+    )
+    let noteDiv = `
+     <div class='header hidden'>
+        <button>
+            <i class='fa-solid fa-arrow-left'></i>
+        </button>
+        <button>
+            <i class='fa-solid fa-palette'></i>
+        </button>
+        <button>
+            <i class='fa-solid fa-tag'></i>
+        </button>
+        <button>
+            <i class='fa-solid fa-box-archive'></i>
+        </button>
+        <button>
+            <i class='fa-solid fa-trash-alt'></i>
+        </button>
+    </div>
+    <ul class='tags hidden'>${tags}</ul>
+    <div class='content'>
+        <textarea class='title'>${note.title}</textarea>
+        <textarea spellcheck="false" class='text'>${text}</textarea>
+    </div>
+   `
+    let noteEl = document.createElement('div')
+    noteEl.innerHTML = noteDiv
+    noteEl.classList.add(note.state)
+    noteEl.classList.add('note')
+    noteEl.classList.add(`color-${note.color}`)
+
+    let contentEl = noteEl.querySelector('.content')
+    let titleEl = noteEl.querySelector('.title')
+    let textEl = noteEl.querySelector('.text')
+    let tagsEl = noteEl.querySelector('.tags')
+
+    noteEl.style.color = colors[note.color]
+
+    let [backBtn, colorBtn, tagBtn, archiveBtn, delBtn] = noteEl.querySelectorAll('button')
+
+    contentEl.addEventListener('click',()=>{
+        let open = document.querySelector('.show')
+        if(open) open.classList.remove('show')
+        console.log((open ? 'did' : "didn't") + 'open other notes')
+        if(!noteEl.classList.contains('show')){ 
+            noteEl.classList.add('show')
+        }
     })
-    localStorage.setItem('notes',JSON.stringify(notes))
+    titleEl.addEventListener('input',(e)=>{
+        let {value}= e.target
+        titleEl.innerHTML = value
+        putLS()
+    })
+    textEl.addEventListener('input',(e)=>{
+        let {value}= e.target
+        textEl.innerHTML = value
+        putLS()
+    })
+    backBtn.addEventListener('click',()=>{
+        console.log('min')
+        noteEl.classList.remove('show')
+    })
+    colorBtn.addEventListener('click',()=>{
+        noteEl.classList.remove(`color-${note.color}`)
+        note.color = (note.color+1)%colors.length
+        noteEl.style.color = colors[note.color]
+        noteEl.classList.add(`color-${note.color}`)
+        putLS()
+    })
+    colorBtn.addEventListener('contextmenu',()=>{
+        noteEl.classList.remove(`color-${note.color}`)
+        note.color = (colors.length+note.color-1)%colors.length
+        noteEl.style.color = colors[note.color]
+        noteEl.classList.add(`color-${note.color}`)
+        putLS()
+    })
+    tagBtn.addEventListener('click',()=>{
+        tagsEl.classList.toggle('hidden')
+        if(tagsEl.style.height=='fit-content') tagsEl.style.height='0px'
+        else tagsEl.style.height='fit-content'
+        putLS()
+    })
+    archiveBtn.addEventListener('click',()=>{
+        noteEl.classList.remove(note.state)
+        noteEl.classList.add('archive')
+        note.state = 'archive'
+        putLS()
+    })
+    delBtn.addEventListener('click',()=>{
+        noteEl.classList.remove(note.state)
+        noteEl.classList.add('deleted')
+        note.state = 'deleted'
+        noteEl.remove()//add 30 day period, TODO
+        putLS()
+    })
+    
+    notesEl.appendChild(noteEl)
+}
+function putLS(){
+    let notesLS = []
+    let noteEls = document.querySelectorAll('.note')
+    noteEls.forEach((noteEl)=>{
+        let classes = noteEl.classList[0]
+
+        let tagEls = noteEl.querySelectorAll('.tag')
+        let tags = []
+        tagEls.forEach((tag)=>{tags.push(tag.innerHTML)})
+        let col = 0
+        for (let i = 0; i < colors.length; i++) {
+            if(noteEl.classList.contains(`color-${i}`)) {
+                col = i
+            }
+        }
+
+        let noteLS = {
+            state:classes,
+            title:noteEl.querySelector('.title').value,
+            text:noteEl.querySelector('.text').value,
+            color: col,
+            tags:tags
+        }
+        notesLS.push(noteLS)
+        
+    })
+    console.log(notesLS)
+    localStorage.setItem('notes',JSON.stringify(notesLS))
 }

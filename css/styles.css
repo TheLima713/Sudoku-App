@@ -2,14 +2,35 @@
 
 :root {
     --bg-main: #40b;
+<<<<<<< HEAD
 }
 
 * {
+=======
+    --neutral0: #012;
+    --neutral1: #234;
+    --neutral2: #456;
+    --neutral3: #678;
+    --neutral4: #89a;
+    --neutral5: #abc;
+    --neutral6: #cde;
+    --neutral7: #eff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+>>>>>>> a617700 (reworked the app entirely)
     box-sizing: border-box;
 }
 body {
     padding-top: 3rem;
+<<<<<<< HEAD
     background-color: var(--bg-main);
+=======
+    background-color: var(--neutral0);
+>>>>>>> a617700 (reworked the app entirely)
     display: flex;
     flex-wrap: wrap;
     font-family: 'Poppins', sans-serif;
@@ -18,22 +39,32 @@ body {
 }
 
 .add {
-    background-color: #419;
-    color: #fff;
+    background-color: var(--neutral2);
+    color: var(--neutral7);
+
+    width: 4rem;
+    height: 4rem;
+
     border: none;
-    border-radius: 5px;
-    padding: 0.5rem 1rem;
+    border-radius: 100%;
+    padding: 1rem 1rem;
     position: fixed;
     top: 1rem;
-    right: 1rem;
     cursor: pointer;
+    font-size: 2rem;
 }
 
 .notes-c {
     padding-top: 3rem;
+<<<<<<< HEAD
     background-color: var(--bg-main);
     display: flex;
     flex-direction: column;
+=======
+    background-color: var(--neutral0);
+    display: flex;
+    flex-direction: row;
+>>>>>>> a617700 (reworked the app entirely)
     flex-wrap: wrap;
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -42,15 +73,23 @@ body {
 }
 
 .note {
+<<<<<<< HEAD
     border-radius: 10px;
     background-color: #fff;
     margin: 2rem 1rem;
+=======
+    position: relative;
+    border-radius: 10px;
+    background-color: var(--neutral2);
+    margin: 1rem;
+>>>>>>> a617700 (reworked the app entirely)
     height: 400px;
     width: 400px;
     box-shadow: 0 0 10px 4px #0000001a;
     transition: 0.5s;
 }
 
+<<<<<<< HEAD
 .note .tools {
     width: 100%;
     height: fit-content;
@@ -129,3 +168,126 @@ body {
 .note.min .main{
     display: none;
 }
+=======
+.note:not(.show) {
+    width: 200px;
+    height: 150px;
+}
+.note:not(.show) .title{
+    padding-bottom: 2.5rem;
+    height: 50%;
+    cursor: pointer;
+}
+.note:not(.show) .text{
+    padding-bottom: 3rem;
+    cursor: pointer;
+}
+.note:not(.show) .header {
+    display: none;
+}
+.content {
+    color: inherit;
+    height: 85%;
+    padding: .5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    height: 15%;
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: 600;    
+    margin-right: auto;
+    padding: 0;
+}
+
+textarea {
+    margin-top: 1rem;
+    background-color: var(--neutral2);
+    width:100%;
+    height: 100%;
+    color: inherit;
+
+    font-size: 1rem;
+    padding:1rem;
+    
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: clip;
+
+    outline: none;
+    font-family: inherit;
+    border: none;
+    resize: none;
+    
+    display: flex;
+}
+.note:not(.show) textarea {
+    height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.note .header {
+    color: inherit;
+    width: 100%;
+    height: 15%;
+    background-color: var(--neutral1);
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.header button {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.1rem;
+    margin-left: .5rem;
+    cursor: pointer;
+}
+
+.tags {
+    top: 10%;
+    border: 2.5px solid var(--neutral2);
+    border-radius: 5px;
+
+    background-color: var(--neutral3);
+    width: 50%;
+    left: 25%;
+    padding: 0;
+    position: absolute;
+    
+    align-items: center;
+    text-align: center;
+}
+.tags li{
+    border: 2px solid var(--neutral3);
+    background-color: var(--neutral4);
+    border-radius: 5px;
+    margin: 2.5px;
+    padding: 2.5px;
+    list-style-type: none;
+}
+
+.tags li .del-tag {
+    display: none;
+    background-color: transparent;
+    color: inherit;
+    border: none;
+    font-size: .5rem;
+    cursor: pointer;
+}
+.tags li:hover .del-tag {
+    display: contents;
+}
+
+.hidden {
+    display: none;
+}
+
+>>>>>>> a617700 (reworked the app entirely)
