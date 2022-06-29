@@ -3,22 +3,17 @@
     "short_name":"Q.Notes",
     "start_url":"/index.html",
     "display":"standalone",
-    "background_col/or":"#336",
-    "theme_color":"#448",
+    "background_col/or":"#234",
+    "theme_color":"#89a",
     "orientation":"portrait-primary",
     "icons":[
         {
-            "src":"/img/notes2.png",
+            "src":"/img/notes64x64.png",
             "type":"image/png",
             "sizes":"64x64"
         },
         {
-            "src":"/img/notes3.png",
-            "type":"image/png",
-            "sizes":"128x128"
-        },
-        {
-            "src":"/img/notes4.png",
+            "src":"/img/notes144x144.png",
             "type":"image/png",
             "sizes":"144x144"
         }
