@@ -23,7 +23,7 @@ addBtn.addEventListener('click',()=>{
 function addNote(note = note0){
     let text = note.text
     let tags = ''
-    note.tags.forEach(tag=>
+    if(tags)note.tags.forEach(tag=>
         tags+=`
         <li>
             <p class="tag">${tag}</p>

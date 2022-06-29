@@ -2,11 +2,6 @@
 
 :root {
     --bg-main: #40b;
-<<<<<<< HEAD
-}
-
-* {
-=======
     --neutral0: #012;
     --neutral1: #234;
     --neutral2: #456;
@@ -21,16 +16,11 @@
     margin: 0;
     padding: 0;
     border: none;
->>>>>>> a617700 (reworked the app entirely)
     box-sizing: border-box;
 }
 body {
     padding-top: 3rem;
-<<<<<<< HEAD
-    background-color: var(--bg-main);
-=======
     background-color: var(--neutral0);
->>>>>>> a617700 (reworked the app entirely)
     display: flex;
     flex-wrap: wrap;
     font-family: 'Poppins', sans-serif;
@@ -56,15 +46,9 @@ body {
 
 .notes-c {
     padding-top: 3rem;
-<<<<<<< HEAD
-    background-color: var(--bg-main);
-    display: flex;
-    flex-direction: column;
-=======
     background-color: var(--neutral0);
     display: flex;
     flex-direction: row;
->>>>>>> a617700 (reworked the app entirely)
     flex-wrap: wrap;
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -73,102 +57,16 @@ body {
 }
 
 .note {
-<<<<<<< HEAD
-    border-radius: 10px;
-    background-color: #fff;
-    margin: 2rem 1rem;
-=======
     position: relative;
     border-radius: 10px;
     background-color: var(--neutral2);
     margin: 1rem;
->>>>>>> a617700 (reworked the app entirely)
     height: 400px;
     width: 400px;
     box-shadow: 0 0 10px 4px #0000001a;
     transition: 0.5s;
 }
 
-<<<<<<< HEAD
-.note .tools {
-    width: 100%;
-    height: fit-content;
-    background-color: #419;
-    display: flex;
-    justify-content: flex-end;
-    padding: .5rem;
-}
-
-.tools button {
-    background-color: transparent;
-    border: none;
-    color: #fff;
-    font-size: 1.1rem;
-    margin-left: .5rem;
-    cursor: pointer;
-}
-
-.title {
-    color: #fff;
-    margin-right: auto;
-    font-size: 1.25rem;
-    font-weight: 700;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.note .main {
-    width: 100%;
-    height: 100%;
-    display: flex;
-
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow: hidden;
-    
-    background-color: #fff;
-    padding:0 1rem;
-    font-size: 1rem;
-}
-
-.note textarea {
-    outline: none;
-    font-family: inherit;
-    border: none;
-    
-    width: 100%;
-    height: 100%;
-    display: flex;
-
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    overflow: hidden;
-    
-    background-color: #ddd;
-    padding:1rem 1rem;
-    font-size: 1rem;
-    
-    color: #888;
-}
-
-.note .hidden {
-    display: none;
-}
-
-.note.min {
-    width: fit-content;
-    height: 0px;
-}
-
-.note.min textarea{
-    display: none;
-}
-.note.min .main{
-    display: none;
-}
-=======
 .note:not(.show) {
     width: 200px;
     height: 150px;
@@ -290,4 +188,3 @@ textarea {
     display: none;
 }
 
->>>>>>> a617700 (reworked the app entirely)
