@@ -78,7 +78,8 @@ function addNote(note = note0){
 
     contentEl.addEventListener('click',()=>{
         let open = document.querySelector('.show')
-        if(open) open.classList.remove('show')
+        //if found open note and is note itself..
+        if(open&&!noteEl.isEqualNode(noteEl)) open.classList.remove('show')
         if(!noteEl.classList.contains('show')){ 
             noteEl.classList.add('show')
             textEl.classList.toggle('hidden')
