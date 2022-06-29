@@ -68,20 +68,38 @@ body {
 }
 
 .note:not(.show) {
-    width: 200px;
+    width: 150px;
     height: 150px;
 }
-.note:not(.show) .title{
+.title{
     padding-bottom: 2.5rem;
     height: 50%;
     cursor: pointer;
 }
-.note:not(.show) .text{
+.text{
     padding-bottom: 3rem;
     cursor: pointer;
 }
 .note:not(.show) .header {
     display: none;
+}
+.p-title{
+    width: 100%;
+    cursor: pointer;
+
+    font-size: 1.5rem;
+    font-weight: 600;   
+    
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.p-text{
+    cursor: pointer;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .content {
     color: inherit;
@@ -120,12 +138,6 @@ textarea {
     resize: none;
     
     display: flex;
-}
-.note:not(.show) textarea {
-    height: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .note .header {

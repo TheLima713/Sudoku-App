@@ -53,8 +53,10 @@ function addNote(note = note0){
     </div>
     <ul class='tags hidden'>${tags}</ul>
     <div class='content'>
-        <textarea class='title'>${note.title}</textarea>
-        <textarea spellcheck="false" class='text'>${text}</textarea>
+        <p class='p-title'>${note.title}</p><br>
+        <textarea spellcheck='false' class='hidden title'>${note.title}</textarea>
+        <p class='p-text'>${text}</p>
+        <textarea spellcheck='false' class='hidden text'>${text}</textarea>
     </div>
    `
     let noteEl = document.createElement('div')
@@ -65,7 +67,9 @@ function addNote(note = note0){
 
     let contentEl = noteEl.querySelector('.content')
     let titleEl = noteEl.querySelector('.title')
+    let pTitleEl = noteEl.querySelector('.p-title')
     let textEl = noteEl.querySelector('.text')
+    let pTextEl = noteEl.querySelector('.p-text')
     let tagsEl = noteEl.querySelector('.tags')
 
     noteEl.style.color = colors[note.color]
@@ -75,24 +79,33 @@ function addNote(note = note0){
     contentEl.addEventListener('click',()=>{
         let open = document.querySelector('.show')
         if(open) open.classList.remove('show')
-        console.log((open ? 'did' : "didn't") + 'open other notes')
         if(!noteEl.classList.contains('show')){ 
             noteEl.classList.add('show')
         }
+        textEl.classList.toggle('hidden')
+        pTextEl.classList.toggle('hidden')
+        titleEl.classList.toggle('hidden')
+        pTitleEl.classList.toggle('hidden')
     })
     titleEl.addEventListener('input',(e)=>{
         let {value}= e.target
         titleEl.innerHTML = value
+        pTitleEl.innerText = value
         putLS()
     })
     textEl.addEventListener('input',(e)=>{
         let {value}= e.target
         textEl.innerHTML = value
+        pTextEl.innerText = value
         putLS()
     })
     backBtn.addEventListener('click',()=>{
-        console.log('min')
         noteEl.classList.remove('show')
+        textEl.classList.toggle('hidden')
+        pTextEl.classList.toggle('hidden')
+        titleEl.classList.toggle('hidden')
+        pTitleEl.classList.toggle('hidden')
+        putLS()
     })
     colorBtn.addEventListener('click',()=>{
         noteEl.classList.remove(`color-${note.color}`)
@@ -156,6 +169,5 @@ function putLS(){
         notesLS.push(noteLS)
         
     })
-    console.log(notesLS)
     localStorage.setItem('notes',JSON.stringify(notesLS))
 }
