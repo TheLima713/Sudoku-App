@@ -13,6 +13,7 @@ if(notes){
     })
 }
 
+
 function addNewNote(noteLS){
     const text = noteLS ? noteLS.text : ""
     const note = document.createElement('div')
