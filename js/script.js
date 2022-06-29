@@ -1,3 +1,9 @@
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js')
+        .then(()=>console.log('registered SW'))
+        .catch(()=>console.log('didn\'t register SW'))
+}
+
 const colors = ['#ddf','#f24','#f82','#fd2','#2f4','#2df','#24f','#82f','#f2d']
 
 const notesEl = document.getElementById('notes-c')
