@@ -81,11 +81,11 @@ function addNote(note = note0){
         if(open) open.classList.remove('show')
         if(!noteEl.classList.contains('show')){ 
             noteEl.classList.add('show')
+            textEl.classList.toggle('hidden')
+            pTextEl.classList.toggle('hidden')
+            titleEl.classList.toggle('hidden')
+            pTitleEl.classList.toggle('hidden')
         }
-        textEl.classList.toggle('hidden')
-        pTextEl.classList.toggle('hidden')
-        titleEl.classList.toggle('hidden')
-        pTitleEl.classList.toggle('hidden')
     })
     titleEl.addEventListener('input',(e)=>{
         let {value}= e.target
