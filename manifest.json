@@ -35,7 +35,7 @@
             "src":"/img/notedx192.png",
             "type":"image/png",
             "sizes":"192x192",
-            "purpose":"maskable"
+            "purpose":"any"
         },
         {
             "src":"/img/notedx384.png",
