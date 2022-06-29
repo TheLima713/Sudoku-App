@@ -106,6 +106,7 @@ function addNote(note = note0){
         pTextEl.classList.toggle('hidden')
         titleEl.classList.toggle('hidden')
         pTitleEl.classList.toggle('hidden')
+        tagsEl.classList.add('hidden')
         putLS()
     })
     colorBtn.addEventListener('click',()=>{
