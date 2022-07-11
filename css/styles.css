@@ -9,10 +9,18 @@
     --main5: #0099bb;
     --main6: #00bbdd;
     --main7: #00ddff;
+    --neutral0: #111;
+    --neutral1: #333;
+    --neutral2: #555;
+    --neutral3: #777;
+    --neutral4: #999;
+    --neutral5: #bbb;
+    --neutral6: #ddd;
+    --neutral7: #fff;
 }
 
 body {
-    background-color: var(--main2);
+    background-color: var(--main1);
 
     font-family: 'Poppins', sans-serif;
     display: flex;
@@ -23,39 +31,48 @@ body {
 }
 
 .title {
-    background-color: var(--main6);
+    background-color: var(--main4);
 
     margin: 1rem;
     padding: 1rem;
 }
 
 .board {
-    background-color: var(--main4);
+    background-color: var(--main6);
 
-    width: min(60vw,80vh);
+    width: min(50vw,75vh);
     aspect-ratio: 1/1;
-
-    padding: 1rem;
-    border-radius: 5%;
 
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-content: space-between;
+}
+
+.box {
+    background-color: var(--main1);
+
+    width: 30%;
+    aspect-ratio: 1/1;
+
+    padding: .5rem;
+    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     align-items: center;
 }
 
-.cell {
-    background-color: var(--main5);
+.cell-c {
+    background-color: var(--main2);
 
-    width: 10%;
+    width: 100%;
     aspect-ratio: 1/1;
-    border-radius: 50%;
-
-    border: 1px solid var(--main4);
 
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-between;
 
     cursor: pointer;
 
@@ -63,14 +80,23 @@ body {
     transition: 0.5s;
 }
 
+.cell {
+    background-color: var(--main1);
+    width: 31%;
+    aspect-ratio: 1/1;
+
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .cell.init {
-    background-color: var(--main4);
-    color: var(--main5);
+    color: var(--neutral6);
 }
 
 .cell.placed {
-    background-color: var(--main5);
-    color: var(--main0);
+    color: var(--main6);
 }
 
 .digits {

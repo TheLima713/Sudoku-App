@@ -1,8 +1,8 @@
-if('serviceWorker' in navigator){
+/*if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js')
         .then(()=>console.log('registered SW'))
         .catch(()=>console.log('didn\'t register SW'))
-}
+}*/
 
 const digitsEl = document.getElementById('digits')
 const boardEl = document.getElementById('board')
@@ -30,8 +30,6 @@ function newGame(board) {
     solve(board)
     randHide(board,45,5)
 
-    
-
     digitsEl.innerHTML = ''
     for (let i = 1; i <= 9; i++) {
         let digit = document.createElement('div')
@@ -50,33 +48,42 @@ function newGame(board) {
     }
 
     boardEl.innerHTML = ''
-    for (let x = 0; x < 9; x++) {
-        for (let y = 0; y < 9; y++) {
-            let cell = document.createElement('div')
-            cell.classList.add('cell')
+    for (let b = 0; b < 9; b++) {
+        let box = document.createElement('div')
+        box.id = `b${b}`
+        box.classList.add('box')
+        let wrap = document.createElement('div')
+        wrap.classList.add('cell-c')
+        for (let y = 3*Math.floor(b/3); y < 3*Math.floor(b/3)+3; y++) {
+            for (let x = 3*(b%3); x < 3*(b%3)+3; x++) {
+                let cell = document.createElement('div')
+                cell.classList.add('cell')
 
-            cell.id = `${x}-${y}`
-            if(board[y][x]>0) {
-                cell.innerText = board[y][x]
-                cell.classList.add('init')
-            }
-            cell.addEventListener('click',()=>{
-                if(currNum && !cell.classList.contains('init')) {
-                    if(currNum == cell.innerText) {
-                        cell.innerText = ''
-                        cell.classList.remove('placed')
-                        board[x][y] = 0
-                    }
-                    else {
-                        cell.innerText = currNum
-                        cell.classList.add('placed')
-                        board[x][y] = currNum
-                    }
+                cell.id = `n${board[y][x]} ${x}-${y}`
+                if(board[y][x]>0) {
+                    cell.innerText = board[y][x]
+                    cell.classList.add('init')
                 }
-            })
-            
-            boardEl.appendChild(cell)
-        }      
+                cell.addEventListener('click',()=>{
+                    if(currNum && !cell.classList.contains('init')) {
+                        if(currNum == cell.innerText) {
+                            cell.innerText = ''
+                            cell.classList.remove('placed')
+                            board[x][y] = 0
+                        }
+                        else {
+                            cell.innerText = currNum
+                            cell.id = `n${board[y][x]} ${x}-${y}`
+                            cell.classList.add('placed')
+                            board[x][y] = currNum
+                        }
+                    }
+                })
+                wrap.appendChild(cell)
+            }      
+        }
+        box.appendChild(wrap)
+        boardEl.appendChild(box)
     }
 }
 

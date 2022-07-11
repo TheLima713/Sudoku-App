@@ -12,7 +12,7 @@ const assets = [
     'https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap'
 ]
 
-self.addEventListener('install',e=>{
+/*self.addEventListener('install',e=>{
     e.waitUntil(
         caches.open(statCacheName)
         .then(cache =>{
@@ -25,7 +25,7 @@ self.addEventListener('install',e=>{
 self.addEventListener('fetch',e=>{
     e.respondWith(
         caches.match(e.request).then(cacheRes=>{
-            return /*cacheRes || */fetch(e.request)
+            return /*cacheRes || *//*fetch(e.request)
         })
     )
-})
+})*/
