@@ -9,57 +9,80 @@ const boardEl = document.getElementById('board')
 
 var currNum = null
 var currTile = null
+var markMode = false
 
+newGame()
 
-let baseBoard = [
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0]
-]
-
-newGame(baseBoard)
-
-function newGame(board) {
+function newGame() {
+    let board = []
+    for (let y = 0; y < 9; y++) board[y] = [0,0,0,0,0,0,0,0,0]
     randPlace(board,15,5)
     solve(board)
-    randHide(board,45,5)
+    randHide(board,45,10)
 
     digitsEl.innerHTML = ''
     for (let i = 1; i <= 9; i++) {
         let digit = document.createElement('div')
         digit.classList.add('digit')
+        digit.classList.add(`d${i}`)
+        let nCount = 0
+        board.forEach(row=>{
+            row.forEach(num=>{
+                if(num==i) nCount++
+            })
+        })
 
         digit.id = i
-        digit.innerText = i
+        digit.innerHTML = `${i}<br>(${9-nCount})`
 
         digit.addEventListener('click',()=>{
+            //deselect prev digit and select curr one
             let nums = digitsEl.querySelectorAll('.digit')
             nums.forEach(num=>num.classList.remove('selected'))
             currNum = i
             digit.classList.add('selected')
+
+            //highlight currently selected number cells
+            let cells = document.querySelectorAll('.cell')
+            cells.forEach(cell=>{
+                if(cell.classList.contains(`n${currNum}`)) {
+                    cell.classList.add('highlight')
+                }
+                else cell.classList.remove('highlight')
+            })
         })
         digitsEl.appendChild(digit)
     }
+    //notedown mark button
+    let markBtn = document.createElement('button')
+    markBtn.classList.add('edit-btn')
+    markBtn.addEventListener('click',()=>{
+        markBtn.classList.toggle('on')
+        markMode = !markMode
+        console.log(markMode)
+    })
+    markBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'
+    digitsEl.appendChild(markBtn)
 
+    //for each box
     boardEl.innerHTML = ''
     for (let b = 0; b < 9; b++) {
         let box = document.createElement('div')
         box.id = `b${b}`
         box.classList.add('box')
-        let wrap = document.createElement('div')
-        wrap.classList.add('cell-c')
+        let boxWrap = document.createElement('div')
+        boxWrap.classList.add('box-wrap')
+
+        //do its cells
         for (let y = 3*Math.floor(b/3); y < 3*Math.floor(b/3)+3; y++) {
             for (let x = 3*(b%3); x < 3*(b%3)+3; x++) {
+                let cellWrap = document.createElement('div')
+                cellWrap.classList.add('cell-wrap')
                 let cell = document.createElement('div')
                 cell.classList.add('cell')
+                cell.classList.add(`n${board[y][x]}`)
+                cell.classList.add(`${x}-${y}`)
 
-                cell.id = `n${board[y][x]} ${x}-${y}`
                 if(board[y][x]>0) {
                     cell.innerText = board[y][x]
                     cell.classList.add('init')
@@ -69,20 +92,36 @@ function newGame(board) {
                         if(currNum == cell.innerText) {
                             cell.innerText = ''
                             cell.classList.remove('placed')
-                            board[x][y] = 0
+                            cell.classList.remove(`n${board[y][x]}`)
+                            cell.classList.remove('highlight')
+                            board[y][x] = 0
+                            cell.classList.add(`n${board[y][x]}`)
                         }
                         else {
                             cell.innerText = currNum
                             cell.id = `n${board[y][x]} ${x}-${y}`
                             cell.classList.add('placed')
-                            board[x][y] = currNum
+                            cell.classList.remove(`n${board[y][x]}`)
+                            board[y][x] = currNum
+                            cell.classList.add(`n${board[y][x]}`)
+                            cell.classList.add('highlight')
                         }
+                        let nCount = 0
+                        board.forEach(row=>{
+                            row.forEach(num=>{
+                                if(num==currNum) nCount++
+                            })
+                        })
+                        let digit = document.querySelector(`.d${currNum}`)
+                        if(digit) digit.innerHTML = `${currNum}<br>(${9-nCount})`
+                        else console.log('didnt find')
                     }
                 })
-                wrap.appendChild(cell)
+                cellWrap.appendChild(cell)
+                boxWrap.appendChild(cellWrap)
             }      
         }
-        box.appendChild(wrap)
+        box.appendChild(boxWrap)
         boardEl.appendChild(box)
     }
 }
@@ -168,14 +207,5 @@ function randHide(board,repeat, tries) {
             randHide(board,1, tries-1)
         }
         
-    }
-}
-
-function updateCells() {
-    for (let x = 0; x < 9; x++) {
-        for (let y = 0; y < 9; y++) {
-            let cell = document.getElementById(x+'-'+y)
-            cell.innerText = baseBoard[x][y] > 0 ? baseBoard[x][y] : ''
-        }
     }
 }

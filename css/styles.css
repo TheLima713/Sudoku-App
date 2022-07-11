@@ -63,7 +63,7 @@ body {
     align-items: center;
 }
 
-.cell-c {
+.box-wrap {
     background-color: var(--main2);
 
     width: 100%;
@@ -80,11 +80,22 @@ body {
     transition: 0.5s;
 }
 
-.cell {
+.cell-wrap {
     background-color: var(--main1);
     width: 31%;
     aspect-ratio: 1/1;
 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cell {
+    width: 100%;
+    aspect-ratio: 1/1;
+    
+    border-radius: 50%;
     
     display: flex;
     justify-content: center;
@@ -99,6 +110,12 @@ body {
     color: var(--main6);
 }
 
+.cell.highlight {
+    background-color: var(--main6);
+    color: var(--main2);
+    transition: 0.5s;
+}
+
 .digits {
     width: min(75vw,75vh);
     display: flex;
@@ -106,10 +123,12 @@ body {
 }
 
 .digit {
-    background-color: var(--main5);
+    color: var(--neutral5);
     
     width: 10%;
     aspect-ratio: 1/1;
+
+    border: 2px solid var(--main3);
     border-radius: 50%;
 
     display: flex;
@@ -118,9 +137,55 @@ body {
 
     margin: .1rem;
     cursor: pointer;
+    font-weight: 600;
+    line-height: 100%;
+}
+
+.digit:hover {
+    background-color: var(--main6);
+    color: var(--main1);
+    border: 2px solid var(--main6);
+
+    transition: 0.5s;
 }
 
 .digit.selected {
-    background-color: var(--main7);
+    background-color: var(--main6);
+    color: var(--main1);
+    border: 2px solid var(--main6);
+}
 
+.edit-btn {
+    background-color: transparent;
+    color: var(--neutral5);
+    
+    width: 10%;
+    aspect-ratio: 1/1;
+
+    border: 2px solid var(--main3);
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: .1rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.edit-btn:hover {
+    background-color: var(--main6);
+    color: var(--main1);
+    border: 2px solid var(--main6);
+    
+    transition: 0.5s;
+}
+
+.edit-btn.on {
+    background-color: var(--main6);
+    color: var(--main1);
+    border: 2px solid var(--main6);
+    
+    transition: 0.5s;
 }
