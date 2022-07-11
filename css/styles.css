@@ -40,7 +40,7 @@ body {
 .board {
     background-color: var(--main6);
 
-    width: min(50vw,75vh);
+    width: min(75vw,75vh);
     aspect-ratio: 1/1;
 
     display: flex;
@@ -55,7 +55,7 @@ body {
     width: 30%;
     aspect-ratio: 1/1;
 
-    padding: .5rem;
+    padding: 1%;
     
     display: flex;
     flex-wrap: wrap;
@@ -100,7 +100,7 @@ body {
 }
 
 .digits {
-    width: min(60vw,80vh);
+    width: min(75vw,75vh);
     display: flex;
     flex-direction: row;
 }
