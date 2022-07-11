@@ -4,178 +4,169 @@ if('serviceWorker' in navigator){
         .catch(()=>console.log('didn\'t register SW'))
 }
 
-const colors = ['#ddf','#f24','#f82','#fd2','#2f4','#2df','#24f','#82f','#f2d']
+const digitsEl = document.getElementById('digits')
+const boardEl = document.getElementById('board')
 
-const notesEl = document.getElementById('notes-c')
-const addBtn = document.getElementById('add')
+var currNum = null
+var currTile = null
 
-const notes = JSON.parse(localStorage.getItem('notes'))
-if(notes) notes.forEach(note=>addNote(note))
-let note0 = {
-    state:'active',//'archive'/'deleted',
-    title: 'Title',
-    text:'Text',
-    color: 0,
-    tags:[],
+
+let baseBoard = [
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0]
+]
+
+newGame(baseBoard)
+
+function newGame(board) {
+    randPlace(board,15,5)
+    solve(board)
+    randHide(board,45,5)
+
+    digitsEl.innerHTML = ''
+    for (let i = 1; i <= 9; i++) {
+        let digit = document.createElement('div')
+        digit.classList.add('digit')
+
+        digit.id = i
+        digit.innerText = i
+
+        digit.addEventListener('click',()=>{
+            let nums = digitsEl.querySelectorAll('.digit')
+            nums.forEach(num=>num.classList.remove('selected'))
+            currNum = i
+            digit.classList.add('selected')
+        })
+        digitsEl.appendChild(digit)
+    }
+
+    boardEl.innerHTML = ''
+    for (let x = 0; x < 9; x++) {
+        for (let y = 0; y < 9; y++) {
+            let cell = document.createElement('div')
+            cell.classList.add('cell')
+
+            cell.id = `${x}-${y}`
+            if(board[y][x]>0) {
+                cell.innerText = board[y][x]
+                cell.classList.add('init')
+            }
+            cell.addEventListener('click',()=>{
+                if(currNum && !cell.classList.contains('init')) {
+                    if(currNum == cell.innerText) {
+                        cell.innerText = ''
+                        cell.classList.remove('placed')
+                        board[x][y] = 0
+                    }
+                    else {
+                        cell.innerText = currNum
+                        cell.classList.add('placed')
+                        board[x][y] = currNum
+                    }
+                }
+            })
+            
+            boardEl.appendChild(cell)
+        }      
+    }
 }
 
-//disable right click
-document.addEventListener('contextmenu',(e)=>{e.preventDefault()})
-addBtn.addEventListener('click',()=>{
-    addNote()
-    putLS()
-})
+function inRow(board, row, num) {
+    return board[row].some(n=>n==num)
+}
 
-function addNote(note = note0){
-    let text = note.text
-    let tags = ''
-    if(tags)note.tags.forEach(tag=>
-        tags+=`
-        <li>
-            <p class="tag">${tag}</p>
-            <button class="del-tag">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </li>
-        `
-    )
-    let noteDiv = `
-     <div class='header hidden'>
-        <button>
-            <i class='fa-solid fa-arrow-left'></i>
-        </button>
-        <button>
-            <i class='fa-solid fa-palette'></i>
-        </button>
-        <button>
-            <i class='fa-solid fa-tag'></i>
-        </button>
-        <button>
-            <i class='fa-solid fa-box-archive'></i>
-        </button>
-        <button>
-            <i class='fa-solid fa-trash-alt'></i>
-        </button>
-    </div>
-    <ul class='tags hidden'>${tags}</ul>
-    <div class='content'>
-        <p class='p-title'>${note.title}</p><br>
-        <textarea spellcheck='false' class='hidden title'>${note.title}</textarea>
-        <p class='p-text'>${text}</p>
-        <textarea spellcheck='false' class='hidden text'>${text}</textarea>
-    </div>
-   `
-    let noteEl = document.createElement('div')
-    noteEl.innerHTML = noteDiv
-    noteEl.classList.add(note.state)
-    noteEl.classList.add('note')
-    noteEl.classList.add(`color-${note.color}`)
+function inCol(board, col, num) {
+    for (let y = 0; y < 9; y++) {
+        if(board[y][col]==num) return true        
+    }
+    return false
+}
 
-    let contentEl = noteEl.querySelector('.content')
-    let titleEl = noteEl.querySelector('.title')
-    let pTitleEl = noteEl.querySelector('.p-title')
-    let textEl = noteEl.querySelector('.text')
-    let pTextEl = noteEl.querySelector('.p-text')
-    let tagsEl = noteEl.querySelector('.tags')
-
-    noteEl.style.color = colors[note.color]
-
-    let [backBtn, colorBtn, tagBtn, archiveBtn, delBtn] = noteEl.querySelectorAll('button')
-
-    contentEl.addEventListener('click',()=>{
-        let open = document.querySelector('.show')
-        //if found open note and is note itself..
-        if(open&&!noteEl.isEqualNode(noteEl)) open.classList.remove('show')
-        if(!noteEl.classList.contains('show')){ 
-            noteEl.classList.add('show')
-            textEl.classList.toggle('hidden')
-            pTextEl.classList.toggle('hidden')
-            titleEl.classList.toggle('hidden')
-            pTitleEl.classList.toggle('hidden')
+function inBox(board, row, col, num) {
+    row -= row % 3
+    col -= col % 3
+    for (let y = row; y < row + 3; y++) {
+        for (let x = col; x < col + 3; x++) {
+            if(board[y][x]==num) return true
         }
-    })
-    titleEl.addEventListener('input',(e)=>{
-        let {value}= e.target
-        titleEl.innerHTML = value
-        pTitleEl.innerText = value
-        putLS()
-    })
-    textEl.addEventListener('input',(e)=>{
-        let {value}= e.target
-        textEl.innerHTML = value
-        pTextEl.innerText = value
-        putLS()
-    })
-    backBtn.addEventListener('click',()=>{
-        noteEl.classList.remove('show')
-        textEl.classList.toggle('hidden')
-        pTextEl.classList.toggle('hidden')
-        titleEl.classList.toggle('hidden')
-        pTitleEl.classList.toggle('hidden')
-        tagsEl.classList.add('hidden')
-        putLS()
-    })
-    colorBtn.addEventListener('click',()=>{
-        noteEl.classList.remove(`color-${note.color}`)
-        note.color = (note.color+1)%colors.length
-        noteEl.style.color = colors[note.color]
-        noteEl.classList.add(`color-${note.color}`)
-        putLS()
-    })
-    colorBtn.addEventListener('contextmenu',()=>{
-        noteEl.classList.remove(`color-${note.color}`)
-        note.color = (colors.length+note.color-1)%colors.length
-        noteEl.style.color = colors[note.color]
-        noteEl.classList.add(`color-${note.color}`)
-        putLS()
-    })
-    tagBtn.addEventListener('click',()=>{
-        tagsEl.classList.toggle('hidden')
-        if(tagsEl.style.height=='fit-content') tagsEl.style.height='0px'
-        else tagsEl.style.height='fit-content'
-        putLS()
-    })
-    archiveBtn.addEventListener('click',()=>{
-        noteEl.classList.remove(note.state)
-        noteEl.classList.add('archive')
-        note.state = 'archive'
-        putLS()
-    })
-    delBtn.addEventListener('click',()=>{
-        noteEl.classList.remove(note.state)
-        noteEl.classList.add('deleted')
-        note.state = 'deleted'
-        noteEl.remove()//add 30 day period, TODO
-        putLS()
-    })
-    
-    notesEl.appendChild(noteEl)
+    }
+    return false
 }
-function putLS(){
-    let notesLS = []
-    let noteEls = document.querySelectorAll('.note')
-    noteEls.forEach((noteEl)=>{
-        let classes = noteEl.classList[0]
 
-        let tagEls = noteEl.querySelectorAll('.tag')
-        let tags = []
-        tagEls.forEach((tag)=>{tags.push(tag.innerHTML)})
-        let col = 0
-        for (let i = 0; i < colors.length; i++) {
-            if(noteEl.classList.contains(`color-${i}`)) {
-                col = i
+function canPlace(board, col, row, num) {
+    return (!inRow(board, row,num) && !inCol(board, col,num) && !inBox(board, row,col,num))
+}
+
+function solve(board) {
+    for (let y = 0; y < 9; y++) {
+        for (let x = 0; x < 9; x++) {
+            if(board[y][x]==0) {
+                for (let n = 1; n <= 9; n++) {
+                    if(canPlace(board, x, y, n)) {
+                        //try to solve the board with this guess
+                        board[y][x] = n
+                        //the guess worked, return success
+                        if(solve(board)) return true
+                        //the guess didn't work, clean it
+                        else {
+                            board[y][x] = 0
+                        }
+                    }
+                }
+                //something went wrong before me, can't place anything!
+                return false
             }
         }
+    }
+    return true
+}
 
-        let noteLS = {
-            state:classes,
-            title:noteEl.querySelector('.title').value,
-            text:noteEl.querySelector('.text').value,
-            color: col,
-            tags:tags
+function randPlace(board, repeat, tries) {
+    if(tries<1) return
+    for (let r = 0; r < repeat; r++) {
+        let randX = Math.floor(9 * Math.random())
+        let randY = Math.floor(9 * Math.random())
+        let randN = Math.floor(1+9 * Math.random())
+        if(!canPlace(board,randX,randY,randN) || board[randY][randX]!=0) {
+            console.log(`failed to place ${randN} at ${randX},${randY}, ${tries} tries left`)
+            randPlace(board, 1, tries-1)
         }
-        notesLS.push(noteLS)
+        else {
+            console.log(`placed ${randN} at ${randX},${randY}`)
+            board[randY][randX] = randN
+        }
+    }
+}
+
+function randHide(board,repeat, tries) {
+    if(tries<1) return
+    for (let r = 0; r < repeat; r++) {
+        let randX = Math.floor(9 * Math.random())
+        let randY = Math.floor(9 * Math.random())
+        if(board[randY][randX] != 0) {
+            console.log(`(${repeat}) hid ${randX}, ${randY}`)
+            board[randY][randX] = 0
+        }
+        else {
+            console.log(`(${repeat}) failed to hide ${randX}, ${randY}`)
+            randHide(board,1, tries-1)
+        }
         
-    })
-    localStorage.setItem('notes',JSON.stringify(notesLS))
+    }
+}
+
+function updateCells() {
+    for (let x = 0; x < 9; x++) {
+        for (let y = 0; y < 9; y++) {
+            let cell = document.getElementById(x+'-'+y)
+            cell.innerText = baseBoard[x][y] > 0 ? baseBoard[x][y] : ''
+        }
+    }
 }

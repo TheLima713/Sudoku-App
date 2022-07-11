@@ -1,201 +1,99 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap');
 
 :root {
-    --bg-main: #40b;
-    --neutral0: #012;
-    --neutral1: #234;
-    --neutral2: #456;
-    --neutral3: #678;
-    --neutral4: #89a;
-    --neutral5: #abc;
-    --neutral6: #cde;
-    --neutral7: #eff;
+    --main0: #000011;
+    --main1: #001133;
+    --main2: #003355;
+    --main3: #005577;
+    --main4: #007799;
+    --main5: #0099bb;
+    --main6: #00bbdd;
+    --main7: #00ddff;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    border: none;
-    box-sizing: border-box;
-}
 body {
-    padding-top: 3rem;
-    background-color: var(--neutral0);
-    display: flex;
-    flex-wrap: wrap;
+    background-color: var(--main2);
+
     font-family: 'Poppins', sans-serif;
-    margin: 0;
-    justify-content: center;
-}
-
-.add {
-    background-color: var(--neutral2);
-    color: var(--neutral7);
-
-    width: 4rem;
-    height: 4rem;
-
-    border: none;
-    border-radius: 100%;
-    padding: 1rem 1rem;
-    position: fixed;
-    top: 1rem;
-    cursor: pointer;
-    font-size: 2rem;
-}
-
-.notes-c {
-    padding-top: 3rem;
-    background-color: var(--neutral0);
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    width: 100vw;
+    text-align: center;
 }
 
-.note {
-    position: relative;
-    border-radius: 10px;
-    background-color: var(--neutral2);
+.title {
+    background-color: var(--main6);
+
     margin: 1rem;
-    height: 400px;
-    width: 400px;
-    box-shadow: 0 0 10px 4px #0000001a;
+    padding: 1rem;
+}
+
+.board {
+    background-color: var(--main4);
+
+    height: 70vh;
+    aspect-ratio: 1/1;
+
+    padding: 1rem;
+    border-radius: 5%;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cell {
+    background-color: var(--main5);
+
+    width: 10%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+
+    border: 1px solid var(--main4);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    font-weight: 600;
     transition: 0.5s;
 }
 
-.note:not(.show) {
-    width: 150px;
-    height: 150px;
-}
-.title{
-    width: 90%;
-    padding: 0;
-    margin-top: 0;
-    margin-left: 1rem;
-    height: 10%;
-    cursor: pointer;
-    
-    font-size: 1.5rem;
-    font-weight: 600;    
-}
-.text{
-    padding-bottom: 3rem;
-    cursor: pointer;
-}
-.note:not(.show) .header {
-    display: none;
-}
-.p-title{
-    background-color: var(--neutral1);
-    width: 100%;
-    cursor: pointer;
-    padding: .5rem;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-
-    font-size: 1.5rem;
-    font-weight: 600;   
-    
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-.p-text{
-    padding: .5rem;
-    cursor: pointer;
-
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-.content {
-    color: inherit;
-    height: 85%;
+.cell.init {
+    background-color: var(--main4);
+    color: var(--main5);
 }
 
-textarea {
-    margin-top: 1rem;
-    background-color: var(--neutral2);
-    width:100%;
-    height: 100%;
-    color: inherit;
+.cell.placed {
+    background-color: var(--main5);
+    color: var(--main0);
+}
 
-    font-size: 1rem;
-    padding:1rem;
-    
-    overflow: hidden;
-    white-space: normal;
-    text-overflow: clip;
-
-    outline: none;
-    font-family: inherit;
-    border: none;
-    resize: none;
-    
+.digits {
     display: flex;
+    flex-direction: row;
 }
 
-.note .header {
-    color: inherit;
-    width: 100%;
-    height: 15%;
-    background-color: var(--neutral1);
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-.header button {
-    background-color: transparent;
-    border: none;
-    color: inherit;
-    font-size: 1.1rem;
-    margin-left: .5rem;
-    cursor: pointer;
-}
-
-.tags {
-    top: 10%;
-    border: 2.5px solid var(--neutral2);
-    border-radius: 5px;
-
-    background-color: var(--neutral3);
-    width: 50%;
-    left: 25%;
-    padding: 0;
-    position: absolute;
+.digit {
+    background-color: var(--main5);
     
+    width: 2rem;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
     align-items: center;
-    text-align: center;
-}
-.tags li{
-    border: 2px solid var(--neutral3);
-    background-color: var(--neutral4);
-    border-radius: 5px;
-    margin: 2.5px;
-    padding: 2.5px;
-    list-style-type: none;
-}
 
-.tags li .del-tag {
-    display: none;
-    background-color: transparent;
-    color: inherit;
-    border: none;
-    font-size: .5rem;
+    margin: .5rem;
     cursor: pointer;
 }
-.tags li:hover .del-tag {
-    display: contents;
-}
 
-.hidden {
-    display: none;
-}
+.digit.selected {
+    background-color: var(--main7);
 
+}

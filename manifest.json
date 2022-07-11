@@ -1,53 +1,41 @@
 {
-    "name": "Quick Notes",
-    "short_name":"Q.Notes",
+    "name": "Sudoku App",
+    "short_name":"Sudoku",
     "start_url":"/index.html",
     "display":"standalone",
-    "background_col/or":"#234",
-    "theme_color":"#89a",
+    "background_col/or":"#079",
+    "theme_color":"#0bd",
     "orientation":"portrait-primary",
     "icons":[
         {
-            "src":"/img/notedx48.png",
+            "src":"/img/sudoku1.png",
             "type":"image/png",
             "sizes":"48x48",
             "purpose":"maskable"
         },
         {
-            "src":"/img/notedx72.png",
+            "src":"/img/sudoku2.png",
             "type":"image/png",
             "sizes":"72x72",
             "purpose":"maskable"
         },
         {
-            "src":"/img/notedx96.png",
+            "src":"/img/sudoku3.png",
             "type":"image/png",
             "sizes":"96x96",
             "purpose":"maskable"
         },
         {
-            "src":"/img/notedx128.png",
+            "src":"/img/sudoku4.png",
             "type":"image/png",
             "sizes":"128x128",
             "purpose":"maskable"
         },
         {
-            "src":"/img/notedx192.png",
+            "src":"/img/sudoku5.png",
             "type":"image/png",
             "sizes":"192x192",
             "purpose":"any"
-        },
-        {
-            "src":"/img/notedx384.png",
-            "type":"image/png",
-            "sizes":"384x384",
-            "purpose":"maskable"
-        },
-        {
-            "src":"/img/notedx512.png",
-            "type":"image/png",
-            "sizes":"512x512",
-            "purpose":"maskable"
         }
     ]
 }

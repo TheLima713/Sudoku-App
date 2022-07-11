@@ -1,16 +1,14 @@
-const statCacheName = 'site-static'
+const statCacheName = 'sudoku-cache'
 const assets = [
     '/',
     '/index.html',
     '/js/script.js',
     '/css/styles.css',
-    '/img/notedx48.png',
-    '/img/notedx72.png',
-    '/img/notedx96.png',
-    '/img/notedx128.png',
-    '/img/notedx192.png',
-    '/img/notedx384.png',
-    '/img/notedx512.png',
+    '/img/sudoku1.png',
+    '/img/sudoku2.png',
+    '/img/sudoku3.png',
+    '/img/sudoku4.png',
+    '/img/sudoku5.png',
     'https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap'
 ]
 
