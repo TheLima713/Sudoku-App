@@ -30,6 +30,8 @@ function newGame(board) {
     solve(board)
     randHide(board,45,5)
 
+    
+
     digitsEl.innerHTML = ''
     for (let i = 1; i <= 9; i++) {
         let digit = document.createElement('div')
