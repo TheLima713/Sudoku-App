@@ -97,10 +97,15 @@ body {
     
     border-radius: 50%;
     
+    font-size: 100%;
     overflow: wrap;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.cell.mark {
+    font-size: 30%;
 }
 
 .cell.init {
