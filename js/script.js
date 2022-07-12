@@ -102,10 +102,9 @@ function newGame() {
                             cell.classList.remove(`n${currNum}`)
                             cell.classList.remove('highlight')
                             board[y][x] = [0]
-                            cell.classList.add(`n${board[y][x]}`)
                         }
                         else {
-                            cell.innerText += `${currNum} `
+                            cell.innerText += ` ${currNum} `
                             cell.id = `n${board[y][x]} ${x}-${y}`
                             cell.classList.add('placed')
                             cell.classList.remove(`n${board[y][x]}`)
