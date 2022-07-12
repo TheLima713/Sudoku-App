@@ -6,6 +6,7 @@
 
 const digitsEl = document.getElementById('digits')
 const boardEl = document.getElementById('board')
+const checkBtn = document.getElementById('check')
 
 var currNum = null
 var currTile = null
@@ -18,12 +19,31 @@ function newGame() {
     for (let y = 0; y < 9; y++) {
         board[y] = []
         for (let x = 0; x < 9; x++) {
-            board[y][x] = [0]
+            board[y][x] = []
         }
     }
     randPlace(board,15,5)
     solve(board)
     randHide(board,45,10)
+
+    
+    checkBtn.addEventListener('click',()=>{
+        if(checkBoard(board)) {
+            checkBtn.style.color = '#22dd00'
+            checkBtn.style.backgroundColor = 'var(--main1)'
+            checkBtn.style.borderColor = '#22dd00'
+        }
+        else {
+            checkBtn.style.color = '#dd2200'
+            checkBtn.style.backgroundColor = 'var(--main1)'
+            checkBtn.style.borderColor = '#dd2200'
+        }
+        setTimeout(()=>{
+            checkBtn.style.color = 'var(--main6)'
+            checkBtn.style.backgroundColor = 'var(--main1)'
+            checkBtn.style.borderColor = 'var(--main6)'
+        },1000)
+    })
 
     digitsEl.innerHTML = ''
     for (let i = 1; i <= 9; i++) {
@@ -43,9 +63,21 @@ function newGame() {
         digit.addEventListener('click',()=>{
             //deselect prev digit and select curr one
             let nums = digitsEl.querySelectorAll('.digit')
-            nums.forEach(num=>num.classList.remove('selected'))
-            currNum = i
-            digit.classList.add('selected')
+
+            if(digit.classList.contains('selected')) {
+                nums.forEach(num=>num.classList.remove('selected'))
+                //update number
+                currNum = null
+            }
+            else {
+                nums.forEach(num=>num.classList.remove('selected'))
+                digit.classList.add('selected')
+                //update number
+                currNum = i
+            }
+            
+            //if number clicked is not same as previous
+
 
             //highlight currently selected number cells
             let cells = document.querySelectorAll('.cell')
@@ -64,7 +96,6 @@ function newGame() {
     markBtn.addEventListener('click',()=>{
         markBtn.classList.toggle('on')
         markMode = !markMode
-        console.log(markMode)
     })
     markBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'
     digitsEl.appendChild(markBtn)
@@ -85,33 +116,46 @@ function newGame() {
                 cellWrap.classList.add('cell-wrap')
                 let cell = document.createElement('div')
                 cell.classList.add('cell')
-                cell.classList.add(`n${board[y][x]}`)
                 cell.classList.add(`${x}-${y}`)
 
-                if(!board[y][x].every(item=>item==0)) {
-                    board[y][x].forEach(mark=>{
-                        cell.innerText+= `${mark} `
-                    })
+                if(board[y][x][0]==0) {
+                    cell.classList.add('placed')
+                    board[y][x] = []
+                }
+                else {
+                    cell.innerText = board[y][x][0]
                     cell.classList.add('init')
+                    cell.classList.add(`n${board[y][x]}`)
                 }
                 cell.addEventListener('click',()=>{
                     if(currNum && !cell.classList.contains('init')) {
-                        if(cell.innerText.search(`${currNum}`)>=0) {
+                        //if number is on cell
+                        if(cell.classList.contains(`n${currNum}`)) {
+                            //remove text and class
                             cell.innerText = cell.innerText.replace(`${currNum}`,'')
-                            cell.classList.remove('placed')
                             cell.classList.remove(`n${currNum}`)
                             cell.classList.remove('highlight')
-                            board[y][x] = [0]
+                            board[y][x] = board[y][x].filter(num=>{return num!=currNum})
                         }
                         else {
-                            cell.innerText += ` ${currNum} `
-                            cell.id = `n${board[y][x]} ${x}-${y}`
-                            cell.classList.add('placed')
-                            cell.classList.remove(`n${board[y][x]}`)
-                            board[y][x] = currNum
-                            cell.classList.add(`n${currNum}`)
+                            //update cell text
+                            //remove previous number
+                            if(markMode) {
+                                cell.innerText += ` ${currNum} `
+                                cell.classList.add(`n${currNum}`)
+                                board[y][x].push(currNum)
+                            }
+                            else {
+                                cell.classList.remove(`n${board[y][x]}`)
+                                board[y][x] = [currNum]
+                                cell.innerText = `${currNum}`
+                            }
                             cell.classList.add('highlight')
+                            cell.classList.add(`n${currNum}`)
                         }
+                        if(board[y][x].length>1) cell.classList.add('mark')
+                        else cell.classList.remove('mark')
+
                         let nCount = 0
                         board.forEach(row=>{
                             row.forEach(num=>{
@@ -119,10 +163,7 @@ function newGame() {
                             })
                         })
                         let digit = document.querySelector(`.d${currNum}`)
-                        if(digit) digit.innerHTML = `${currNum}<br>${9-nCount > 0 ? `(${9-nCount})` : ''}`
-                        else console.log('didnt find')
-                        if(board[y][x].length>1) cell.classList.add('mark')
-                        else cell.classList.remove('mark')
+                        digit.innerHTML = `${currNum}<br>${9-nCount > 0 ? `(${9-nCount})` : ''}`
                     }
                 })
                 cellWrap.appendChild(cell)
@@ -135,29 +176,48 @@ function newGame() {
 }
 
 function inRow(board, row, num) {
-    return board[row].some(n=>n[0]==num)
+    let count = 0
+    board[row].forEach(n=>{
+        if(n==num) count++
+    })
+    return count
 }
 
 function inCol(board, col, num) {
+    let count = 0
     for (let y = 0; y < 9; y++) {
-        if(board[y][col][0]==num) return true
+        if(board[y][col][0]==num) count++
     }
-    return false
+    return count
 }
 
 function inBox(board, row, col, num) {
     row -= row % 3
     col -= col % 3
+    let count = 0
     for (let y = row; y < row + 3; y++) {
         for (let x = col; x < col + 3; x++) {
-            if(board[y][x][0]==num) return true
+            if(board[y][x][0]==num) count++
         }
     }
-    return false
+    return count
 }
 
-function canPlace(board, col, row, num) {
-    return (!inRow(board, row,num) && !inCol(board, col,num) && !inBox(board, row,col,num))
+function canPlace(board, col, row, num, check) {
+    if(check) {
+        return (
+            inRow(board, row,num)==1
+            && inCol(board, col,num)==1 
+            && inBox(board, row,col,num)==1
+        )
+    }
+    else {
+        return (
+            inRow(board, row,num)<1
+            && inCol(board, col,num)<1 
+            && inBox(board, row,col,num)<1
+        )
+    }
 }
 
 function solve(board) {
@@ -191,11 +251,9 @@ function randPlace(board, repeat, tries) {
         let randY = Math.floor(9 * Math.random())
         let randN = Math.floor(1+9 * Math.random())
         if(!canPlace(board,randX,randY,randN) || board[randY][randX]!=0) {
-            console.log(`failed to place ${randN} at ${randX},${randY}, ${tries} tries left`)
             randPlace(board, 1, tries-1)
         }
         else {
-            console.log(`placed ${randN} at ${randX},${randY}`)
             board[randY][randX] = [randN]
         }
     }
@@ -207,13 +265,22 @@ function randHide(board,repeat, tries) {
         let randX = Math.floor(9 * Math.random())
         let randY = Math.floor(9 * Math.random())
         if(board[randY][randX] != 0) {
-            console.log(`(${repeat}) hid ${randX}, ${randY}`)
             board[randY][randX][0] = 0
         }
         else {
-            console.log(`(${repeat}) failed to hide ${randX}, ${randY}`)
             randHide(board,1, tries-1)
         }
         
     }
+}
+
+function checkBoard(board) {
+    for (let y = 0; y < 9; y++) {
+        for (let x = 0; x < 9; x++) {
+            if(board[y][x].length>1) return false
+            if(board[y][x][0]==0) return false
+            if(!canPlace(board,x,y,board[y][x][0],true)) return false
+        }
+    }
+    return true
 }
