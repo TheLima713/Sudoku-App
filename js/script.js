@@ -71,7 +71,6 @@ function newGame() {
 
     //for each box
     boardEl.innerHTML = ''
-    board[0][0] = [1,2,3]
     for (let b = 0; b < 9; b++) {
         let box = document.createElement('div')
         box.id = `b${b}`
