@@ -120,14 +120,18 @@ body {
     width: min(75vw,75vh);
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: space-around;
 }
 
 .digit {
     color: var(--neutral5);
     
-    width: 10%;
+    width: 17%;
     aspect-ratio: 1/1;
 
+    margin: .5rem 0;
     border: 2px solid var(--main3);
     border-radius: 50%;
 
@@ -135,7 +139,6 @@ body {
     justify-content: center;
     align-items: center;
 
-    margin: .1rem;
     cursor: pointer;
     font-weight: 600;
     line-height: 100%;
@@ -159,9 +162,10 @@ body {
     background-color: transparent;
     color: var(--neutral5);
     
-    width: 10%;
+    width: 17%;
     aspect-ratio: 1/1;
 
+    margin: .5rem 0;
     border: 2px solid var(--main3);
     border-radius: 50%;
 
@@ -169,7 +173,6 @@ body {
     justify-content: center;
     align-items: center;
 
-    margin: .1rem;
     cursor: pointer;
     font-weight: 600;
 }

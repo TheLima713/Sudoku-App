@@ -15,7 +15,12 @@ newGame()
 
 function newGame() {
     let board = []
-    for (let y = 0; y < 9; y++) board[y] = [0,0,0,0,0,0,0,0,0]
+    for (let y = 0; y < 9; y++) {
+        board[y] = []
+        for (let x = 0; x < 9; x++) {
+            board[y][x] = [0]
+        }
+    }
     randPlace(board,15,5)
     solve(board)
     randHide(board,45,10)
@@ -66,6 +71,7 @@ function newGame() {
 
     //for each box
     boardEl.innerHTML = ''
+    board[0][0] = [1,2,3]
     for (let b = 0; b < 9; b++) {
         let box = document.createElement('div')
         box.id = `b${b}`
@@ -83,27 +89,29 @@ function newGame() {
                 cell.classList.add(`n${board[y][x]}`)
                 cell.classList.add(`${x}-${y}`)
 
-                if(board[y][x]>0) {
-                    cell.innerText = board[y][x]
+                if(!board[y][x].every(item=>item==0)) {
+                    board[y][x].forEach(mark=>{
+                        cell.innerText+= `${mark} `
+                    })
                     cell.classList.add('init')
                 }
                 cell.addEventListener('click',()=>{
                     if(currNum && !cell.classList.contains('init')) {
-                        if(currNum == cell.innerText) {
-                            cell.innerText = ''
+                        if(cell.innerText.search(`${currNum}`)>=0) {
+                            cell.innerText = cell.innerText.replace(`${currNum}`,'')
                             cell.classList.remove('placed')
-                            cell.classList.remove(`n${board[y][x]}`)
+                            cell.classList.remove(`n${currNum}`)
                             cell.classList.remove('highlight')
-                            board[y][x] = 0
+                            board[y][x] = [0]
                             cell.classList.add(`n${board[y][x]}`)
                         }
                         else {
-                            cell.innerText = currNum
+                            cell.innerText += `${currNum} `
                             cell.id = `n${board[y][x]} ${x}-${y}`
                             cell.classList.add('placed')
                             cell.classList.remove(`n${board[y][x]}`)
                             board[y][x] = currNum
-                            cell.classList.add(`n${board[y][x]}`)
+                            cell.classList.add(`n${currNum}`)
                             cell.classList.add('highlight')
                         }
                         let nCount = 0
@@ -113,7 +121,7 @@ function newGame() {
                             })
                         })
                         let digit = document.querySelector(`.d${currNum}`)
-                        if(digit) digit.innerHTML = `${currNum}<br>(${9-nCount})`
+                        if(digit) digit.innerHTML = `${currNum}<br>${9-nCount > 0 ? `(${9-nCount})` : ''}`
                         else console.log('didnt find')
                     }
                 })
@@ -127,12 +135,12 @@ function newGame() {
 }
 
 function inRow(board, row, num) {
-    return board[row].some(n=>n==num)
+    return board[row].some(n=>n[0]==num)
 }
 
 function inCol(board, col, num) {
     for (let y = 0; y < 9; y++) {
-        if(board[y][col]==num) return true        
+        if(board[y][col][0]==num) return true
     }
     return false
 }
@@ -142,7 +150,7 @@ function inBox(board, row, col, num) {
     col -= col % 3
     for (let y = row; y < row + 3; y++) {
         for (let x = col; x < col + 3; x++) {
-            if(board[y][x]==num) return true
+            if(board[y][x][0]==num) return true
         }
     }
     return false
@@ -159,12 +167,12 @@ function solve(board) {
                 for (let n = 1; n <= 9; n++) {
                     if(canPlace(board, x, y, n)) {
                         //try to solve the board with this guess
-                        board[y][x] = n
+                        board[y][x] = [n]
                         //the guess worked, return success
                         if(solve(board)) return true
                         //the guess didn't work, clean it
                         else {
-                            board[y][x] = 0
+                            board[y][x] = [0]
                         }
                     }
                 }
@@ -188,7 +196,7 @@ function randPlace(board, repeat, tries) {
         }
         else {
             console.log(`placed ${randN} at ${randX},${randY}`)
-            board[randY][randX] = randN
+            board[randY][randX] = [randN]
         }
     }
 }
@@ -200,7 +208,7 @@ function randHide(board,repeat, tries) {
         let randY = Math.floor(9 * Math.random())
         if(board[randY][randX] != 0) {
             console.log(`(${repeat}) hid ${randX}, ${randY}`)
-            board[randY][randX] = 0
+            board[randY][randX][0] = 0
         }
         else {
             console.log(`(${repeat}) failed to hide ${randX}, ${randY}`)
