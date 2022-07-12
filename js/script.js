@@ -121,6 +121,8 @@ function newGame() {
                         let digit = document.querySelector(`.d${currNum}`)
                         if(digit) digit.innerHTML = `${currNum}<br>${9-nCount > 0 ? `(${9-nCount})` : ''}`
                         else console.log('didnt find')
+                        if(board[y][x].length>1) cell.style.fontSize = '30%'
+                        else cell.style.fontSize = '100%'
                     }
                 })
                 cellWrap.appendChild(cell)
