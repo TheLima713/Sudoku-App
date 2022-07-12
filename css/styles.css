@@ -82,7 +82,7 @@ body {
 
 .cell-wrap {
     background-color: var(--main1);
-    width: 31%;
+    width: 30%;
     aspect-ratio: 1/1;
 
     
@@ -97,7 +97,6 @@ body {
     
     border-radius: 50%;
     
-    display: flex;
     justify-content: center;
     align-items: center;
 }
