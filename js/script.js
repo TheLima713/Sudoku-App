@@ -125,7 +125,7 @@ function newGame() {
                           if(board[y][x].length>1) cell.style.fontSize = '30%'
                           else cell.style.fontSize = '100%'
                         }
-                        catch(err){boardEl.innerText=err}
+                        catch(err){cell.innerText=err}
                     }
                 })
                 cellWrap.appendChild(cell)
