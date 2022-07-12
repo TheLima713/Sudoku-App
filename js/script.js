@@ -122,8 +122,8 @@ function newGame() {
                         if(digit) digit.innerHTML = `${currNum}<br>${9-nCount > 0 ? `(${9-nCount})` : ''}`
                         else console.log('didnt find')
                         try{
-                          if(board[y][x].length>1) cell.style.fontSize = '30%'
-                          else cell.style.fontSize = '100%'
+                          if(board[y][x].length>1) cell.classList.add('mark')
+                          else cell.classList.remove('mark')
                         }
                         catch(err){cell.innerText=err}
                     }
