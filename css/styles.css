@@ -32,16 +32,24 @@ body {
 
 .header {
     margin: 1rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
-.title {
-    background-color: var(--main4);
+.timer {
+    color: var(--main6);
 
     margin: 1rem;
     padding: 1rem;
+
+    font-size: 150%;
+    letter-spacing: .25rem;
 }
 
-.check {
+.btn {
     background-color: transparent;
     color: var(--main6);
 
@@ -55,7 +63,7 @@ body {
     transition: 0.5s;
 }
 
-.check:hover {
+.btn:hover {
     background-color: var(--main6);
     color: var(--main1);
 }
@@ -152,7 +160,7 @@ body {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     align-content: space-around;
 }
 
@@ -160,6 +168,7 @@ body {
     color: var(--neutral5);
     
     width: 17%;
+    height: 50%;
     aspect-ratio: 1/1;
 
     margin: .5rem 0;
@@ -194,6 +203,7 @@ body {
     color: var(--neutral5);
     
     width: 17%;
+    height: 50%;
     aspect-ratio: 1/1;
 
     margin: .5rem 0;

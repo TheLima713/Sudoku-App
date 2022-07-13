@@ -1,18 +1,39 @@
-/*if('serviceWorker' in navigator){
+if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js')
         .then(()=>console.log('registered SW'))
         .catch(()=>console.log('didn\'t register SW'))
-}*/
+}
 
 const digitsEl = document.getElementById('digits')
 const boardEl = document.getElementById('board')
+
+const playBtn = document.getElementById('play')
+const timerEl = document.getElementById('timer')
 const checkBtn = document.getElementById('check')
 
 var currNum = null
 var currTile = null
 var markMode = false
+var startTime
 
 newGame()
+updateTime()
+setInterval(updateTime,1000)
+
+function updateTime(){
+    const currDate = new Date()
+
+    const time = (currDate-startTime)/1000
+    const mins = Math.floor(time/60)%60
+    const secs = Math.floor(time)%60
+    
+    timerEl.innerText = `${format(mins)}:${format(secs)}`
+    console.log( `${format(mins)}:${format(secs)}`)
+}
+
+function format(time){
+    return time < 10 ? (`0${time}`) : time
+}
 
 function newGame() {
     let board = []
@@ -26,6 +47,11 @@ function newGame() {
     solve(board)
     randHide(board,45,10)
 
+    playBtn.addEventListener('click',()=>{
+        startTime = new Date()
+        updateTime()
+        newGame()
+    })
     
     checkBtn.addEventListener('click',()=>{
         if(checkBoard(board)) {
@@ -44,6 +70,8 @@ function newGame() {
             checkBtn.style.borderColor = 'var(--main6)'
         },1000)
     })
+
+    startTime = new Date()
 
     digitsEl.innerHTML = ''
     for (let i = 1; i <= 9; i++) {
@@ -96,6 +124,16 @@ function newGame() {
     markBtn.addEventListener('click',()=>{
         markBtn.classList.toggle('on')
         markMode = !markMode
+        if(!markMode) {
+            markBtn.style.backgroundColor = 'transparent';
+            markBtn.style.color = 'var(--neutral5)';
+            markBtn.style.border = '2px solid var(--main3)';
+        }
+        else {
+            markBtn.style.backgroundColor = 'var(--main6)';
+            markBtn.style.color = 'var(--main1)';
+            markBtn.style.border = '2px solid var(--main6)';
+        }
     })
     markBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'
     digitsEl.appendChild(markBtn)
@@ -131,15 +169,23 @@ function newGame() {
                     if(currNum && !cell.classList.contains('init')) {
                         //if number is on cell
                         if(cell.classList.contains(`n${currNum}`)) {
-                            //remove text and class
-                            cell.innerText = cell.innerText.replace(`${currNum}`,'')
-                            cell.classList.remove(`n${currNum}`)
-                            cell.classList.remove('highlight')
-                            board[y][x] = board[y][x].filter(num=>{return num!=currNum})
+                            //if you're marking or not and cell matches..
+                            if(markMode==cell.classList.contains('mark')){
+                                cell.innerText = cell.innerText.replace(`${currNum}`,'')
+                                cell.classList.remove(`n${currNum}`)
+                                cell.classList.remove('highlight')
+                                board[y][x] = board[y][x].filter(num=>{return num!=currNum})
+                            }
+                            else {
+                                cell.innerText = `${currNum}`
+                                board[y][x].forEach(mark=>{
+                                    cell.classList.remove(`n${mark}`)
+                                })
+                                board[y][x] = [currNum]
+                                cell.classList.add(`n${currNum}`)
+                            }
                         }
                         else {
-                            //update cell text
-                            //remove previous number
                             if(markMode) {
                                 cell.innerText += ` ${currNum} `
                                 cell.classList.add(`n${currNum}`)
@@ -153,7 +199,7 @@ function newGame() {
                             cell.classList.add('highlight')
                             cell.classList.add(`n${currNum}`)
                         }
-                        if(board[y][x].length>1) cell.classList.add('mark')
+                        if(markMode) cell.classList.add('mark')
                         else cell.classList.remove('mark')
 
                         let nCount = 0
