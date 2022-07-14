@@ -11,7 +11,7 @@ const assets = [
     '/img/sudoku5.png',
     'https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;700&display=swap'
 ]
-
+/*
 self.addEventListener('install',e=>{
     e.waitUntil(
         caches.open(statCacheName)
@@ -28,4 +28,4 @@ self.addEventListener('fetch',e=>{
             return cacheRes || fetch(e.request)
         })
     )
-})
+})*/
