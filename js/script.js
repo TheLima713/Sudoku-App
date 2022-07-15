@@ -3,7 +3,6 @@
         .then(()=>console.log('registered SW'))
         .catch(()=>console.log('didn\'t register SW'))
 }*/
-
 const digitsEl = document.getElementById('digits')
 const boardEl = document.getElementById('board')
 
@@ -19,7 +18,10 @@ var time = 0
 
 newGame()
 updateTime()
-setInterval(updateTime,1000)
+setInterval(()=>{
+    if(document.hasFocus()) updateTime()
+},1000)
+
 
 function updateTime(){
     time++
@@ -173,64 +175,6 @@ function newGame() {
                     if(cell.classList.contains('mark')) type = 'mark'
                     if(type=='init') return
                     board[y][x] = updateCell(cell,num,mark,arr,type)
-                    /*
-                    //if number is not fixed
-                    if(currNum && !cell.classList.contains('init')) {
-                        console.log(board[y][x].length)
-                        //if number is on cell
-                        if(cell.classList.contains(`n${currNum}`)) {
-                            //if cell matches what you write, remove it
-                            if(markMode==cell.classList.contains('mark')){
-                                cell.innerText = cell.innerText.replace(`${currNum}`,'')
-                                cell.classList.remove(`n${currNum}`)
-                                cell.classList.remove('highlight')
-                                board[y][x] = board[y][x].filter(num=>{return num!=currNum})
-                            }
-                            //else, overwrite cell
-                            else {
-                                cell.innerText = `${currNum}`
-                                board[y][x].forEach(mark=>{
-                                    cell.classList.remove(`n${mark}`)
-                                })
-                                board[y][x] = [currNum]
-                                cell.classList.add(`n${currNum}`)
-                                //if adding mark, deduct num, else add
-                                if(markMode) digitCount[currNum]--
-                                else digitCount[currNum]++
-                            }
-                        }
-                        //not on cell, add mark or overwrite cell
-                        else {
-                            if(markMode) {
-                                cell.innerText += ` ${currNum} `
-                                cell.classList.add(`n${currNum}`)
-                                board[y][x].push(currNum)
-                            }
-                            else {
-                                cell.classList.remove(`n${board[y][x]}`)
-                                board[y][x] = [currNum]
-                                cell.innerText = `${currNum}`
-                                //update digit count
-                                digitCount[currNum]++
-                            }
-                            cell.classList.add('highlight')
-                            cell.classList.add(`n${currNum}`)
-                        }
-                        if(markMode) cell.classList.add('mark')
-                        else cell.classList.remove('mark')
-
-                        let digit = document.querySelector(`.d${currNum}`)
-                        digit.innerHTML = `
-                            ${currNum}
-                            <br>
-                            ${
-                                9-digitCount[currNum] > 0 
-                                ? `(${9-digitCount[currNum]})` 
-                                : ''
-                            }
-                        `
-                    }
-                    */
                 })
                 cellWrap.appendChild(cell)
                 boxWrap.appendChild(cellWrap)
@@ -245,7 +189,6 @@ function newGame() {
     () num, []mark, {}fixed
     if num on fixed, keep fixed
     (1)->{2} = {2}
-
     if num on empty, set to num
     (1)->() = (1)
     1++
@@ -256,14 +199,12 @@ function newGame() {
     (1)->(2) = (1)
     2--
     1++
-
     if mark on empty, add mark
     [1]->() = [1]
     if mark on mark, remove mark
     [1]->[1,2] = [2]
     if mark1 on mark2, add mark1
     [1]->[2] = [1,2]
-
     if mark on num, set to mark
     [1]->(1) = [1]
     1--
@@ -276,6 +217,7 @@ function newGame() {
 */
 function updateCell(cell,num,mark,arr,type) {
     if(mark) {
+        if(arr.length==1&&type=='num') digitCount[arr[0]]--
         cell.classList.add('mark')
         let foundNum = arr.find(item=>item==num)
         if(foundNum) {
@@ -294,19 +236,30 @@ function updateCell(cell,num,mark,arr,type) {
         if(arr.length==0) cell.classList.remove('mark')
     }
     else {
-        [1,2,3,4,5,6,7,8,9].forEach(num=>cell.classList.remove('n'+num))
+        
         let foundNum = arr.find(item=>item==num)
         if(foundNum) {
-            //if num and board isnt mark
-            if(type!='mark') {
-                arr = arr.filter(item=>item!=foundNum)
-                cell.classList.remove('n'+num)
+            [1,2,3,4,5,6,7,8,9].forEach(n=>{
+                cell.classList.remove('n'+n)
+            })
+            //
+            if(type=='num') {
+                digitCount[arr[0]]--
+                arr = []
                 cell.classList.remove('highlight')
             }
-            else arr = [num]
+            else {
+                digitCount[arr[0]]++
+                arr = [num]
+                cell.classList.add('n'+num)
+            }
         }
         else {
-            cell.classList.remove('n'+arr[0])
+            if(type=='num') digitCount[arr[0]]--
+            digitCount[num]++
+            [1,2,3,4,5,6,7,8,9].forEach(n=>{
+                cell.classList.remove('n'+n)
+            })
             arr = [num]
             cell.classList.add('n'+num)
             cell.classList.add('highlight')
@@ -314,6 +267,14 @@ function updateCell(cell,num,mark,arr,type) {
         cell.classList.remove('mark')
     }
     cell.innerText = `${arr}`.replaceAll(',',' ')
+
+    let d =1
+    let digits = digitsEl.querySelectorAll('.digit')
+    digits.forEach(digit=>{
+        digit.innerHTML = `${d}<br>${9-digitCount[d]>0 ? `(${9-digitCount[d]})`: ''}`
+        d++
+    })
+
     return arr
 }
 
