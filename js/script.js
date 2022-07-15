@@ -251,7 +251,7 @@ function updateCell(cell,num,mark,arr,type) {
                 cell.classList.remove('highlight')
             }
             else {
-                digitCount[arr[0]]++
+                digitCount[num]++
                 arr = [num]
                 cell.classList.add('n'+num)
             }
