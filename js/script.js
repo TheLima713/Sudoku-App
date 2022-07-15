@@ -38,6 +38,7 @@ function format(time){
 }
 
 function newGame() {
+    digitCount = [-1,0,0,0,0,0,0,0,0,0]
     let board = []
     for (let y = 0; y < 9; y++) {
         board[y] = []
