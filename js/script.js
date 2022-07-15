@@ -3,6 +3,7 @@ if('serviceWorker' in navigator){
         .then(()=>console.log('registered SW'))
         .catch(()=>console.log('didn\'t register SW'))
 }
+
 const digitsEl = document.getElementById('digits')
 const boardEl = document.getElementById('board')
 
